@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="#" type="image/x-icon">
+  <title>Table</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .table-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    table { border-collapse: collapse; border-spacing: 0; border: 1px solid red; }
+
+    th,
+    td { border: 1px solid blue;}
+
+  </style>
+</head>
+<body>
+  <h1>Table</h1>
+  <div class="table-wrap">
+    <table>
+      <caption>테이블 판<div>테이블 연습 판 입니다.</div></caption>
+      <colgroup>
+        <col width="100px">
+        <col width="100px">
+        <col width="100px">
+        <col width="100px">
+        <col width="100px">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
+          <th>4</th>
+          <th>5</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>6</td>
+          <td>7</td>
+          <td>8</td>
+          <td>9</td>
+          <td>10</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

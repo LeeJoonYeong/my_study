@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="#" type="image/x-icon">
+  <title>Gradient</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    div {
+      width: 200px;
+      height: 200px;
+      margin: 50px auto;
+      border: 2px solid black;
+    }
+
+    .box1 {
+      background: linear-gradient(to right, red, blue, yellow 50%);
+    }
+
+    .box2 {
+      background: radial-gradient(red, blue, yellow 50%);
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Gradient</h1>
+  <div class="box1"></div>
+  <div class="box2"></div>
+</body>
+</html>

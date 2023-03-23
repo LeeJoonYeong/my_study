@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>로또 추첨</title>
+	<style>
+		.ball {
+			display: inline-block;
+			border: 1px solid black;
+			border-radius: 20px;
+			width: 40px;
+			height: 40px;
+			line-height: 40px;
+			font-size: 20px;
+			text-align: center;
+			margin-right: 20px;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="result">추첨 결과는?</div>
+	<div id="bonus">보너스: </div>
+
+	<script>
+		'use strict';
+
+		const candidate = Array(45).fill().map((v, i) => i + 1);
+		const shuffle = [];
+		while (candidate.length > 0) { // 피셔 예이츠 셔플.
+			const random = Math.floor(Math.random() * candidate.length); // 무작위 인덱스 뽑기.
+			const spliceArray = candidate.splice(random, 1); // 뽑은 값은 배열에 들어 있음.
+			const value = spliceArray[0]; // 배열에 들어 있는 값을 꺼내어,
+			shuffle.push(value); // shuffle 배열에 넣기.
+		}
+
+		console.log('shuffle:', shuffle);
+
+		const winBalls = shuffle.slice(0, 6).sort((a, b) => a - b); // tip. 사전 순 정렬은 sort((a, b) => a.localeCompare(b))
+		const bonus = shuffle[6];
+
+		console.log('winBalls: ', winBalls);
+		console.log('bonus: ', bonus);
+		
+		const $result = document.querySelector('#result');
+		const $bonus = document.querySelector('#bonus');
+
+		const colorize = (number, $tag) => {
+			if (number < 10) {
+				$tag.style.backgroundColor = 'red';
+				$tag.style.color = 'white';
+			} else if (number < 20) {
+				$tag.style.backgroundColor = 'orange';
+			} else if (number < 30) {
+				$tag.style.backgroundColor = 'yellow';
+			} else if (number < 40) {
+				$tag.style.backgroundColor = 'blue';
+				$tag.style.color = 'white';
+			} else {
+				$tag.style.backgroundColor = 'green';
+				$tag.style.color = 'white';
+			}
+		};
+
+		const showBalls = (number, target) => {
+			const $ball = document.createElement('div');
+			$ball.className = 'ball';
+			$ball.textContent = number;
+			colorize(number, $ball);
+			target.appendChild($ball);
+		};
+
+
+		for(let i = 0; i < winBalls.length; i++) {
+			setTimeout(() => {
+				showBalls(winBalls[i], $result);
+			}, (i + 1) * 500);
+		}
+
+		setTimeout(() => {
+			showBalls(bonus, $bonus);
+		}, 3500);
+
+	</script>
+</body>
+</html>

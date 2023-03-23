@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="#" type="image/x-icon">
+  <title>CheckBox</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    div {
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+
+    input[type="checkbox"] {
+      position: absolute;
+      left: 0;
+      width: 82px;
+      height: 32px;
+      margin: 10px;
+      z-index: -1;
+    }
+
+    input#chk2 {
+      left: 102px;
+    }
+
+    input[type="checkbox"] + label {
+      display: block;
+      width: 82px;
+      height: 32px;
+      background: url(./checkbox_blank_outline_icon.png) no-repeat ;
+      background-color: white;
+      padding: 0 0 0 35px;
+      line-height: 32px;
+      cursor: pointer;
+      
+    }
+
+    input[type="checkbox"]:checked + label {
+      background-image: url(./checkbox_icon.png);
+      font-weight: bold;
+      color: blue;
+    }
+
+    label {
+      margin: 10px;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>CheckBox</h1>
+  <div class="box">
+    <input type="checkbox" name="chk" id="chk"><label for="chk">족발</label>
+    <input type="checkbox" name="chk" id="chk2"><label for="chk2">보쌈</label>
+  </div>
+</body>
+</html>

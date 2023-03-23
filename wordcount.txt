@@ -1,0 +1,26 @@
+let entireText = document.body.innerText;
+let splitedText = entireText.split(' ');
+let countedWord = {};
+for (let value of splitedText) {
+    let value_lower = value.toLowerCase();
+    if(countedWord[value_lower] === undefined) {
+        countedWord[value_lower] = 1;
+    } else {
+        countedWord[value_lower] += 1;
+    }
+}
+
+let countedWordArr = [];
+for(let key in countedWord) {
+    countedWordArr.push([key, countedWord[key]]);
+}
+
+countedWordArr.sort((a, b) => {
+    return b[1] - a[1];
+});
+
+let result = '';
+for (let value of countedWordArr) {
+    result += (value[0] + " : " + value[1]) + "\n";
+}
+alert(result);

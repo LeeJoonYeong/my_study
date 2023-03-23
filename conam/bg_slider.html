@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="#" type="image/x-icon">
+  <title>흐르는 배경이미지</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    div { background: url(./city1.jpg) left top / 100% auto repeat-x; margin: 0 auto; width: 800px; height: 488px;  animation: bg_slider linear infinite 10s;}
+    
+    @keyframes bg_slider {
+      0% { background-position: 0;}
+      100% { background-position: -800px;}
+    }
+
+
+  </style>
+</head>
+<body>
+  <h1>흐르는 배경이미지</h1>
+
+  <div>
+
+  </div>
+  
+</body>
+</html>

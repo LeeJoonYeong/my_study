@@ -1,0 +1,23 @@
+ZeroCho / nodebird-react / aws / ubuntu / node 셋팅 5가지
+sudo apt-get update
+sudo apt-get install -y build-essential
+sudo apt-get install curl
+curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash --
+sudo apt-get install -y nodejs
+
+내 깃헙 토큰 (zerochoreactnext)
+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
+
+aws front elastic ip 13.124.161.217
+aws back elastic ip 3.37.244.158
+
+// /etc/nginx/nginx.conf 삽입할 내용
+server {
+  server_name api.pknleenode.com;
+  listen 80;
+  location / {
+    proxy_set_header HOST $host;
+    proxy_pass http://127.0.0.1:3065;
+    proxy_redirect off;
+    }
+}
