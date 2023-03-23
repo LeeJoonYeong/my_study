@@ -1,0 +1,20 @@
+/* 모바일 전용 style
+html { font-size: 10px;}
+body { overflow-x:hidden; font-size: 1rem;}
+body.hidden { position: fixed; overflow-y:hidden;  touch-action: none;}
+*/ 
+
+a, button { color: #666; }
+p, li{ word-break: keep-all; }
+caption { padding: 10px 0; }
+
+.clear { clear: both; }
+.clear:after { content: ""; display: block; clear: both; }
+caption > div,
+legend,
+.hide { overflow: hidden; display: block; position: absolute; border: 0; width: 1px; height: 1px; clip: rect(1px, 1px, 1px, 1px); }
+
+/* 본문 바로가기 스타일*/
+.skip { position: absolute; left: 0; right: 0; top: -100%; transition: all .3s; line-height: 5rem; background: #000; color: #fff; text-align: center; z-index: 100; }
+.skip:focus { top: 0; }
+/* //본문 바로가기 스타일*/
