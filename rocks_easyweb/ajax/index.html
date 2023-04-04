@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="#">
+	<title>AJAX</title>
+</head>
+<body>
+		<div class="box1">
+			hello lee!
+		</div>
+		<button>change</button>
+		<script>
+			'use strict';
+
+			const $box1 = document.querySelector('button');
+
+			$box1.addEventListener('click', (e) => {
+				console.log('ajax conneting..');
+
+				const xhttp = new XMLHttpRequest();
+				// console.log('xhttp: ', xhttp);
+
+				xhttp.onreadystatechange = (e) => {
+
+					console.log(e.target.readyState);
+					/* readyState 번호별 신호
+						0 = 요청 시작이 안됨.
+						1 = 서버 연결 완료.
+						2 = 서버에서 요청 받음.
+						3 = 요청 처리중.
+						4 = 요청에 대한 처리가 끝났고 브라우저로 보낼 반응이 준비됨. 
+					*/
+
+					console.log(e.target.status);
+					/* status 번호별 신호
+						200 = 이상없음.
+						403 = 권한이 없음 and 접근할 수 없음.
+						404 = 해당 파일을 찾을 수 없음. 
+					*/
+
+					if(e.target.readyState === 4 && e.target.status === 200) { // 서버 준비 완료
+
+						console.log('result: ', e.target.responseText); // target.responseText = 통신파일 결과문자.
+
+						document.querySelector('.box1').innerHTML = e.target.responseText; 
+
+					} 
+					
+				};
+
+				xhttp.open('get', './info.txt', true);
+				xhttp.send();
+
+			});
+		</script>
+</body>
+</html>
