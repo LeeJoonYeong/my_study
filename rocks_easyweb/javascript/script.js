@@ -18,3 +18,13 @@ document.querySelector('#switch1').addEventListener('click', () => {
 	});
 
 });
+
+// PC & 모바일 구분하기.
+// 1. DPR (비율)로 구별하기 (이 방법은 브라우저 확대 했을 때 문제가 있음.)
+const device_ratio = window.devicePixelRatio;
+
+if(device_ratio >= 2) { // 모바일
+	console.log('이 메세지가 나타난다면 모바일로 접속한 것입니다.');
+} else { // PC
+	console.log('이 메세지가 나타난다면 PC로 접속한 것입니다.');
+}
