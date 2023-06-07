@@ -12,8 +12,10 @@
 	<script>
 		'use strict';
 
+		/* async 와 await 이해하기 */
 		function timer(time) {
-			return new Promise(function(resolve) {
+
+			return new Promise(function(resolve, reject) {
 
 				setTimeout(function() {
 
@@ -53,9 +55,125 @@
 
 			console.log('end');
 
+			return result;
+
 		}
 
-		run();
+		// run();
+		/* //async 와 await 이해하기 */
+
+
+		/* new Promise 활용해보기 */
+		function job1() { 
+			
+			return new Promise((resolve, reject) => {
+
+				setTimeout(() => {
+
+					resolve('job1 ok!');
+					// reject('job1 failed!'); // 에러 처리
+
+				}, 2000);
+
+			});
+
+		}
+
+		function job2() { 
+			
+			return new Promise((resolve, reject) => {
+
+				setTimeout(() => {
+
+					resolve('job2 ok!');
+					// reject('job1 failed!'); // 에러 처리
+
+				}, 2000);
+
+			});
+
+		}
+
+		// 복잡한 방식
+		// job1().then((data) => {
+
+		// 	console.log('data1: ', data);
+
+		// 	job2().then((data) => {
+
+		// 		console.log('data2: ', data);
+
+		// 	});
+
+		// });
+
+		
+		// 체이닝 방식
+		// job1()
+		// 	.then((data) => {
+
+		// 		console.log('data1: ', data);
+
+		// 		return job2();
+			
+		// 	})
+		// 	.catch((reason) => {
+
+		// 		console.log('reason: ', reason);
+
+		// 		return Promise.reject(reason); // 뒤에 따라오는 then을 실행시키지 않고 종료 시킴
+
+		// 	})
+		// 	.then((data) => {
+
+		// 		console.log('data2: ', data);
+
+		// 	});
+
+		
+		async function run() {
+
+			console.log('업무 준비');
+
+			let first_mission = await job1();
+
+			console.log(first_mission);
+
+			console.log('점심 시간......');
+
+			let second_mission = await job2();
+
+			console.log(second_mission);
+
+			console.log('업무 마무리');
+			console.log('퇴근!!');
+
+		}
+
+		// console.log('출근 완료!');
+		// run();
+		/* //new Promise 활용해보기 */
+
+
+		/* Promise all, race 사용해보기 */
+		console.time('스탑워치(all)');
+		Promise.all([timer(1000), timer(2000), timer(3000)])
+			.then((result) => {
+
+				console.log('result: ', result);
+				console.timeEnd('스탑워치(all)');
+
+			});
+
+		console.time('스탑워치(race)');
+		Promise.race([timer(1000), timer(2000), timer(3000)])
+			.then((result) => {
+
+				console.log('result: ', result);
+				console.timeEnd('스탑워치(race)');
+
+			});
+		/* Promise all, race 사용해보기 */
 
 	</script>
 </body>
