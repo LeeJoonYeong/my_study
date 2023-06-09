@@ -7,8 +7,9 @@
 	<title>가위바위보</title>
 	<style>
 		#computer {
-			width: 142px;
+			width: 163px;
 			height: 200px;
+			background: url('./rsp.png') 0 0 / auto 200px no-repeat;
 		}
 	</style>
 </head>
@@ -28,14 +29,11 @@
 		const $rock = document.querySelector('#rock');
 		const $scissors = document.querySelector('#scissors');
 		const $paper = document.querySelector('#paper');
-		const IMG_URL = './rsp.png';
-		$computer.style.background = `url(${IMG_URL}) 0 0`;
-		$computer.style.backgroundSize = 'auto 200px';
 
 		const rspX = {
 			scissors: '0',
-			rock: '-220px',
-			paper: '-440px',
+			rock: '-228px',
+			paper: '-442px',
 		};
 
 		let computerChoice = 'scissors';
@@ -47,17 +45,67 @@
 			} else if (computerChoice === 'paper') {
 				computerChoice = 'scissors';
 			}
-			$computer.style.background = `url(${IMG_URL}) ${rspX[computerChoice]} 0`;
-			$computer.style.backgroundSize = 'auto 200px';
+			$computer.style.backgroundPosition = `${rspX[computerChoice]} 0`;
 		};
 
-		let intervalId = setInterval(changeComputerHand, 5000);
+		let intervalId = setInterval(changeComputerHand, 50);
 
-		const clickButton = () => {
-			clearInterval(intervalId);
-			setTimeout(() => {
-				intervalId = setInterval(changeComputerHand, 5000);
-			}, 1000);
+		const scoreTable = {
+			rock: 0,
+			scissors: 1,
+			paper: -1,
+		};
+
+		let clickable = true; // 스위치
+		let score = 0;
+
+		const clickButton = (e) => {
+
+			if(clickable) {
+
+				clearInterval(intervalId);
+				clickable = false;
+
+				const myChoice = e.target.id; // 내가 고른 가위바위보 종류
+
+				const myScore = scoreTable[myChoice]; // 나의 가위바위보 종류 점수
+				const computerScore = scoreTable[computerChoice]; // 컴퓨터의 가위바위보 종류 점수
+				const diff = myScore - computerScore; // 결과 종류 점수
+
+				let message = undefined;
+
+				/* 코딩 꿀팁 Tip */
+				/* if ( variable === '고양이' || variable === '사자' || variable === '호랑이' || variable === '토끼' ) 를 간단하게 하면
+				/* if ( ['고양이', '사자', '호랑이', '토끼'].includes(variable) ) 로 간단하게 표현 가능하다.
+				/* //코딩 꿀팁 Tip */
+
+				// 승리 조건   : 2, -1
+				// 패배 조건 	 : -2, 1
+				// 무승부 조건 : 0 
+				switch(diff) {
+					case 2:
+					case -1: message = '승리'; score += 1;
+						break;
+					case -2:
+					case 1: message = '패배'; score -= 1;
+						break;
+					case 0:	message = '무승부';
+						break;
+					default: throw Error('에러 발생');
+						break;
+				}
+
+				$score.textContent = `${message} 총: ${score}점`;
+
+				setTimeout(() => {
+
+					clickable = true;
+					intervalId = setInterval(changeComputerHand, 50);
+	
+				}, 1000);
+
+			}
+
 		};
 
 		$rock.addEventListener('click', clickButton);
