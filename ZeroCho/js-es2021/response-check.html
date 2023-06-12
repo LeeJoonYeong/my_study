@@ -39,7 +39,6 @@
 		const $result = document.querySelector('#result');
 
 		let startTime = undefined;
-		let endTime = undefined;
 
 		$screen.addEventListener('click', (e) => {
 
@@ -61,7 +60,7 @@
 				
 			} else if(e.target.classList.contains('now')) { // 초록
 
-				endTime = new Date();
+				let endTime = new Date();
 
 				$result.textContent = `${endTime - startTime}ms`;
 				$screen.classList.replace('now', 'waiting');
