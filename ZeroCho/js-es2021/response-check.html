@@ -31,14 +31,18 @@
 	
 	<div id="screen" class="waiting">클릭해서 시작하세요</div>
 	<div id="result"></div>
+	<div id="ranking"></div>
 
 	<script>
 		'use strict';
 
 		const $screen = document.querySelector('#screen');
 		const $result = document.querySelector('#result');
+		const $ranking = document.querySelector('#ranking');
 
 		let startTime = undefined;
+		const records = [];
+		let timeoutId = undefined;
 
 		$screen.addEventListener('click', (e) => {
 
@@ -47,7 +51,7 @@
 				$screen.classList.replace('waiting', 'ready');
 				$screen.textContent = '초록색이 되면 클릭하세요';
 
-				setTimeout(() => {
+				timeoutId = setTimeout(() => {
 
 					startTime = new Date();
 					$screen.classList.replace('ready', 'now');
@@ -57,20 +61,39 @@
 
 
 			} else if(e.target.classList.contains('ready')) { // 빨강
+
+				clearTimeout(timeoutId);
+				$screen.classList.replace('ready', 'waiting');
+				$screen.textContent = '너무 성급하시군요!';
+				
 				
 			} else if(e.target.classList.contains('now')) { // 초록
 
 				let endTime = new Date();
 
-				$result.textContent = `${endTime - startTime}ms`;
+				const current = endTime - startTime;
+				records.push(current);
+
+				const average = records.reduce((a, c) => a + c) / records.length; // 자주 쓰이는 배열 값 평균 구하는 식
+
+				$result.textContent = `현재 ${current}ms, 평균: ${average}ms`;
 				$screen.classList.replace('now', 'waiting');
 				$screen.textContent = '클릭해서 시작하세요';
+
+				const topFive = records.sort((a, b) => a - b).slice(0, 5);
+
+				$ranking.innerHTML = null;
+
+				topFive.forEach((el, i) => {
+					$ranking.append(
+						document.createElement('br'),
+						`${i + 1}위: ${el}ms`,
+					);
+				});
 				
 			}
 
 		});
-
-
 	</script>
 </body>
 </html>

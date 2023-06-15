@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>틱택토</title>
+	<style>
+		table {
+			border-collapse: collapse;
+		}
+
+		td {
+			border: 1px solid #000;
+			width: 40px;
+			height: 40px;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<script>
+		'use strict';
+
+		const { body } = document; // 구조분해 할당
+		const $table = document.createElement('table');
+		const $result = document.createElement('div');
+		const rows = [];
+		let turn = 'O';
+		let clickable = true;
+		let gameover = false;
+
+		const checkWinner = (target) => {
+
+			/* 스마트하게 index 구하기 */
+			let rowIndex  = target.parentNode.rowIndex;
+			let cellIndex = target.cellIndex;
+			/* //스마트하게 index 구하기 */
+
+			/* 원초적인 index 구하기 */
+			// let rowIndex  = undefined;
+			// let cellIndex = undefined;
+
+			// rows.forEach((row, ri) => {
+			// 	row.forEach((cell, ci) => {
+
+			// 		if(cell === target) {
+
+			// 			rowIndex  = ri;
+			// 			cellIndex = ci;
+
+			// 		}
+
+			// 	});
+			// });
+			/* //원초적인 index 구하기 */
+
+			let hasWinner = false;
+
+			// 가로줄 검사
+			if(
+				rows[rowIndex][0].textContent === turn &&
+				rows[rowIndex][1].textContent === turn &&
+				rows[rowIndex][2].textContent === turn
+			) {
+				hasWinner = true;
+			}
+
+			// 세로줄 검사
+			if(
+				rows[0][cellIndex].textContent === turn &&
+				rows[1][cellIndex].textContent === turn &&
+				rows[2][cellIndex].textContent === turn
+			) {
+				hasWinner = true;
+			}
+
+			// 대각선 검사
+			if(
+				rows[0][0].textContent === turn &&
+				rows[1][1].textContent === turn &&
+				rows[2][2].textContent === turn
+			) {
+				hasWinner = true;
+			}
+			
+			if(
+				rows[0][2].textContent === turn &&
+				rows[1][1].textContent === turn &&
+				rows[2][0].textContent === turn
+			) {
+				hasWinner = true;
+			}
+			
+			return hasWinner;
+		};
+
+		for(let i = 0; i < 3; i++) {
+
+			const $tr = document.createElement('tr');
+			const cells = [];
+
+			for(let j = 0; j < 3; j++) {
+
+				const $td = document.createElement('td');
+				cells.push($td);
+				$td.addEventListener('click', (e) => {
+
+					if(!clickable) // 컴퓨터 차례 일 때는 종료
+						return;
+
+					if(gameover) // 게임 끝 상태면 종료
+						return;
+
+					if(event.target.textContent) // 이미 누른 칸이면 종료
+						return;
+
+					clickable = false;
+						
+					e.target.textContent = turn; // 마크하기
+
+					// 승리자 판단
+					if(checkWinner(e.target)) {
+						$result.textContent = `당신의 승리!`;
+						gameover = true;
+						return;
+					}
+
+					// 무승부 판단
+					let draw = rows.flat().every((cell) => cell.textContent); // flat() -> n차원 배열을 n-1차원 배열로 만듬 (1차원 까지가 마지막)
+
+					if(draw) {
+						$result.textContent = '무승부';
+						gameover = true;
+						return;
+					}
+
+					const emptyCell = rows.flat().filter((cell) => cell.textContent === '');
+					const randomIndex = Math.floor(Math.random() * emptyCell.length);
+
+					turn = 'X'; // 컴퓨터에게 턴 넘기기
+
+					setTimeout(() => {
+
+						emptyCell[randomIndex].textContent = turn; // 컴퓨터 수 두기
+	
+						if(checkWinner(emptyCell[randomIndex])) { // 컴퓨터 승리 시 종료
+							$result.textContent = `당신의 패배!`;
+							gameover = true;
+							return;
+						}
+	
+						turn = 'O'; // 나에게 턴 넘기기
+						clickable = true;
+						
+					}, 1000);
+					
+				});
+				
+				$tr.append($td);
+				
+			}
+			
+			rows.push(cells);
+			$table.append($tr);
+
+		}
+
+		body.append($table);
+		body.append($result);
+
+	</script>
+</body>
+</html>
