@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>지뢰 찾기</title>
+	<style>
+		table {
+			border-collapse: collapse;
+		}
+
+		td {
+			border: 1px solid #bbb;
+			text-align: center;
+			line-height: 20px;
+			width: 20px;
+			height: 20px;
+			background-color: #888;
+		}
+
+		td.opened {
+			background-color: white;
+		}
+
+		td.flag {
+			background-color: red;
+		}
+
+		td.question {
+			background-color: orange;
+		}
+	</style>
+</head>
+<body>
+	<table id="table">
+		<tbody></tbody>
+	</table>
+	<div id="result"></div>
+
+	<script>
+		'use strict';
+
+		const $tbody  = document.querySelector('#table tbody');
+		const $result = document.querySelector('#result');
+
+		const row  = 10; // 줄
+		const cell = 10; // 칸
+		const mine = 10; // 지뢰
+
+		const CODE = {
+			NORMAL: -1,
+			QUESTION: -2,
+			FLAG: -3,
+			QUESTION_MINE: -4,
+			FLAG_MINE: -5,
+			MINE: -6,
+			OPENED: 0, // 0 이상 이면 모두 열린 칸
+		}
+
+		let data = undefined;
+
+		function plantMine() {
+
+			const candidate = Array(row * cell).fill().map((arr, i) => {
+				return i;
+			});
+
+			const shuffle = [];
+			while(candidate.length > row * cell - mine) {
+				const chosen = candidate.splice(Math.floor(Math.random() * candidate.length), 1)[0];
+				shuffle.push(chosen);
+			}
+
+		}
+
+		function drawTable() {
+
+			data = plantMine();
+
+		}
+
+		drawTable();
+
+	</script>
+</body>
+</html>
