@@ -1,0 +1,18 @@
+{
+  "name": "learn_npm",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "nodemon index.js",
+    "build": "webpack",
+    "test": "echo this is testing..."
+  },
+  "dependencies": {
+    "dayjs": "^1.11.9",
+    "moment": "^2.29.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4"
+  }
+}

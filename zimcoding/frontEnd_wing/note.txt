@@ -1,0 +1,6 @@
+========== 웹팩 명령어 ==========
+npx webpack --entry ./src/index.js --output-path ./dist --mode development 
+
+> --entry [최상단 루트 파일 경로] 
+> --output-path [패키지된 파일을 만들 파일 경로]
+> --mode [development | production] (default는 production)   
