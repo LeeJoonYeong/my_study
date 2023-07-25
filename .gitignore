@@ -6,7 +6,9 @@ webpack
 practice/nextjs
 ZeroCho/react-nodebird
 ZeroCho/react-webgame
-zimcoding/frontEnd_wing/node_modules
+node_modules
 namusori/typescript
 launch.json
-ZeroCho/node-textbook/express-server/.env
+.env
+config.json
+config.ts
