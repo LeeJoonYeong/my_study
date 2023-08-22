@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>테스트</title>
+  <style>
+    body { display: flex; flex-direction: column; align-items: center; padding: 200px 0; }
+    .ground { padding: 20px; border: 5px solid #000; border-radius: 10px; overflow: hidden; }
+    .block_row { position: relative; display: flex; transition: all .5s; }
+    .block_row.ongoing { transition: none; }
+    .block_row.ready { top: 0; opacity: .1; animation: appear .5s; }
+    @keyframes appear {
+      0% { opacity: 0; }
+      100% { opacity: .1; }
+    }
+    .block_row.complete { opacity: 0; }
+    .block_row.complete + .ready { top: -50px; opacity: 1; }
+    .block_row.miss::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: red; opacity: .7; }
+    .block { position: relative; width: 50px; height: 50px; background-size: 50px; background-position: center; background-repeat: no-repeat; }
+    .block ~ .block { margin-left: 10px; }
+    .block.clear { animation: pop .15s; }
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.8); }
+      100% { transform: scale(1); }
+    }
+    .block.miss::before { content: ''; position: absolute; top: 0; left: 0; transform: rotate(45deg); transform-origin: 0 0; width: 143%; height: 5px; background-color: red; animation: stretch .2s; }
+    .block.miss::after { content: ''; position: absolute; top: 0; right: 0; transform: rotate(-45deg); transform-origin: right 0; width: 143%; height: 5px; background-color: red; animation: stretch .2s; }
+    @keyframes stretch {
+      0% { width: 0%; }
+      100% { width: 143%; }
+    }
+
+    .block.up { background-image: url('./arrow_up_light_icon.svg'); }
+    .block.up.clear { background-image: url('./arrow_up_clear_light_icon.png'); }
+    .block.right { background-image: url('./arrow_right_light_icon.svg'); }
+    .block.right.clear { background-image: url('./arrow_right_clear_light_icon.png'); }
+    .block.down { background-image: url('./arrow_down_light_icon.svg'); }
+    .block.down.clear { background-image: url('./arrow_down_clear_light_icon.png'); }
+    .block.left { background-image: url('./arrow_left_light_icon.svg'); }
+    .block.left.clear { background-image: url('./arrow_left_clear_light_icon.png'); }
+
+    .progress_wrap { position: relative; display: none; width: 500px; height: 20px; border: 5px solid #000; border-radius: 50px; overflow: hidden; }
+    .progress_wrap.active { display: block; }
+    .progress_wrap .progress_bar { position: absolute; top: 0; left: 0; width: 50%; height: 100%; background-color: rgb(71, 71, 237); }
+    .progress_wrap .progress_bar.warning { background-color: rgb(218, 218, 8); }
+    .progress_wrap .progress_bar.danger { background-color: rgb(233, 15, 15); }
+  </style>
+</head>
+<body>
+  <div class="ground"></div>
+  <button class="btn_start">시작</button>
+  <div class="progress_wrap">
+    <div class="progress_bar"></div>
+  </div>
+  <div class="result"></div>
+  <script>
+
+    'use strict';
+
+    const $ground       = document.querySelector('.ground');
+    const $btn_start    = document.querySelector('.btn_start');
+    const $progress_bar = document.querySelector('.progress_wrap .progress_bar');
+    const $result       = document.querySelector('.result');
+
+    const arrow_arr = ['up', 'right', 'down', 'left']; // 방향 종류
+
+    let shot_count      = 0;         // 맞춘 개수
+    let stage           = 1;         // 스테이지
+    let start_time      = undefined; // 시작 시간
+    let start_turn_time = undefined; // 턴 시간
+    let turn_limit_time = 5000;      // 한 턴 당 제한 시간(초)
+    let time_id         = undefined; // 한 턴 경과 시간 타이머 id
+    let keyboard_switch = false;     // 키보드 작동 유무 스위치
+
+    // 게임 시작 클릭
+    $btn_start?.addEventListener('click', () => {
+
+      console.log('게임 시작!');
+
+      createBlock('init'); // 초기 블럭 생성
+      createBlock('next'); // 다음 블럭 생성
+
+      $progress_bar.parentElement.classList.add('active');
+
+      keyboard_switch = true; // 키보드 동작 On
+      
+      // 턴 제한 시간 타이머 작동
+      turnLimitTimer(turn_limit_time);
+
+      // 전체 게임 경과 시간 측정 시작
+      start_time = new Date();
+
+    });
+
+    // 키 누름 이벤트
+    document.addEventListener('keyup', (e) => {
+
+      e.preventDefault();
+
+      // 게임 시작 전에는 종료 (안전 장치)
+      if(!keyboard_switch) 
+        return;
+
+      const $target_block = document.querySelector('.block_row.ongoing .target');
+      const press_key = e.key; // 누른 키 종류
+
+      switch (press_key) {
+        case 'ArrowUp': 
+          // console.log('위 키 누름');
+
+          if($target_block.classList.contains('up')) {
+
+            nextBlockStep($target_block);
+
+          } else {
+
+            gameOver($target_block)
+
+          }
+
+          break;
+        case 'ArrowRight':
+          // console.log('오른쪽 키 누름');
+
+          if($target_block.classList.contains('right')) {
+
+            nextBlockStep($target_block);
+
+          } else {
+
+            gameOver($target_block)
+
+          }
+
+          break;
+        case 'ArrowDown':
+          // console.log('아래 키 누름');
+
+          if($target_block.classList.contains('down')) {
+
+            nextBlockStep($target_block);
+
+          } else {
+
+            gameOver($target_block)
+
+          }
+          break;
+        case 'ArrowLeft':
+          // console.log('왼쪽 키 누름');
+
+          if($target_block.classList.contains('left')) {
+
+            nextBlockStep($target_block);
+
+          } else {
+
+            gameOver($target_block)
+
+          }
+          break;
+      
+        default:
+          break;
+      }
+
+    });
+
+    // 블럭 생성 함수
+    function createBlock(mode = 'init') {
+
+      let $block_row = document.createElement('div'); // 한 줄 블럭 박스
+      $block_row.classList.add('block_row');
+
+      if(mode === 'init') 
+        $block_row.classList.add('ongoing');
+      else if(mode === 'next') 
+        $block_row.classList.add('ready');
+      
+      for (let i = 0; i < 10; i++) {
+
+        let $block = document.createElement('div');
+        $block.classList.add('block');
+
+        let random = Math.floor(Math.random() * arrow_arr.length);
+        $block.classList.add(arrow_arr[random]);
+
+        $block_row.append($block);
+
+        // 맨 첫 블럭은 타겟
+        if (i === 0 && mode === 'init') {
+          $block.classList.add('target');
+        } 
+
+      }
+
+      $ground.append($block_row);
+
+    }
+
+    // 턴 제한 시간 타이머 함수
+    function turnLimitTimer(turn_limit_time) {
+
+      $progress_bar.style.width = '0%';
+      start_turn_time = new Date(); // 턴 시간 시작
+      time_id = setInterval(() => {
+        
+        let elapsed_time = new Date() - start_turn_time; // 경과 시간
+        let percentage = (elapsed_time / turn_limit_time) * 100 // 백분율
+
+        $progress_bar.style.width = `${percentage}%`;
+
+        // console.log('백분율: ', percentage);
+        // console.log('경과 시간: ', elapsed_time);
+
+        if(percentage >= 100) { // 시간 오버로 인한 게임 오버
+
+          const $target_block = document.querySelector('.block_row.ongoing');
+          gameOver($target_block);
+
+          $progress_bar.classList.remove('danger');
+
+        } else if (percentage >= 80) {
+
+          $progress_bar.classList.remove('warning');
+          $progress_bar.classList.add('danger');
+
+        } else if (percentage >= 50) 
+          $progress_bar.classList.add('warning')
+        
+        
+
+      }, 10);
+
+    }
+
+    // 다음 블럭으로 가는 함수
+    function nextBlockStep($target_block) {
+
+      $target_block.classList.add('clear');
+      $target_block.classList.remove('target');
+
+      shot_count++; // 맞춘 개수 1증가
+
+      const $next_block = $target_block.nextElementSibling; // 정답 옆 블럭
+
+      if($next_block) {
+
+        $next_block.classList.add('target');
+
+      } else { // 맨 마지막 블럭을 맞출 경우 (다음 스테이지로 이동)
+
+        keyboard_switch = false; // 잠깐 키보드 작동 off
+
+        stage++; // 스테이지 단계 증가
+
+        const $clear_block_row = $target_block.parentElement;         // 클리어 된 블럭 줄
+        const $next_block_row  = $clear_block_row.nextElementSibling; // 다음 스텝 블럭 줄
+
+        const next_turn_limit_time = turn_limit_time - (stage * 200); // 다음 스텝 제한 시간
+
+        $clear_block_row.classList.add('complete');
+       
+        $next_block_row.firstElementChild.classList.add('target');
+
+        if($progress_bar.classList.contains('danger'))
+          $progress_bar.classList.remove('danger');
+
+        if($progress_bar.classList.contains('warning'))
+          $progress_bar.classList.remove('warning');
+
+        clearInterval(time_id);
+        turnLimitTimer(next_turn_limit_time);
+
+        setTimeout(() => {
+
+          $next_block_row.classList.remove('ready');
+          $clear_block_row.remove();
+          createBlock('next');
+
+        }, 700);
+
+        setTimeout(() => {
+
+          $next_block_row.classList.add('ongoing');
+          keyboard_switch = true; // 키보드 작동 On
+          
+        }, 200);
+
+      }
+
+    }
+
+    // 게임 종료 함수
+    function gameOver($target_block) {
+
+      clearInterval(time_id);
+
+      let end_time = (new Date() - start_time) / 1000; // 전체 게임 경과 시간 측정 종료
+      console.log('돌파한 스테이지: ', stage);
+      console.log('총 맞춘 개수: ', shot_count);
+      console.log('총 게임 경과 시간: ', end_time);
+
+      $target_block.classList.add('miss');
+
+      $result.textContent = '게임 오버';
+      keyboard_switch = false;
+
+
+    }
+
+  </script>
+</body>
+</html>

@@ -56,7 +56,7 @@
 			'pink', 'cyan', 'violet', 'gray', 'black',
 		];
 		let colorSlice = colors.slice(0, total / 2);
-		let colorCopy = colorSlice.concat(colorSlice);4
+		let colorCopy = colorSlice.concat(colorSlice);
 		let shuffled = [];
 		let clicked = [];
 		let completed = [];
@@ -146,7 +146,7 @@
 			shuffle();
 			for (let i = 0; i < total; i++) {
 
-				const card = createCard(i);44
+				const card = createCard(i);
 				card.addEventListener('click', onClickCard);
 				$wrapper.appendChild(card);
 				
