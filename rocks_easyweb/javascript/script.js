@@ -28,3 +28,13 @@ if(device_ratio >= 2) { // 모바일
 } else { // PC
 	console.log('이 메세지가 나타난다면 PC로 접속한 것입니다.');
 }
+
+
+// css root 값 조정
+const $test_box = document.querySelector('.test_box');
+$test_box.addEventListener('click', () => {
+	
+	console.log('테스트 상자 배경색 변경');
+	document.documentElement.style.setProperty('--test-color', 'red'); // css :root 스타일 값 변경.
+
+});
