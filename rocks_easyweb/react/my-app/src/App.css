@@ -1,0 +1,36 @@
+.container {
+  width: 400px;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.letter {
+  border: 1px solid #ccc;
+  width: 34px;
+  height: 34px;
+  text-align: center;
+  line-height: 34px;
+  font-size: 24px;
+}
+
+.button {
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  width: 34px;
+  text-align: center;
+  line-height: 34px;
+}
+
+.guessed, .hidden {
+  display: none;
+}

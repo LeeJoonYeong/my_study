@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+</head>
+<body>
+  <div id="content"></div>
+  <script>
+    'use strict';
+
+    // React 17 버전
+    // const myContent = React.createElement('h1', null, 'Hello React With Rocks EasyWeb!'); // 속성 없음
+    // const myContent = React.createElement('h1', {id: 'title'}, 'Hello React With Rocks EasyWeb!'); // 속성 있음
+    // ReactDOM.render(myContent, document.querySelector('#content'));
+
+    // React 18 버전
+    const $myContent = document.querySelector('#content');
+    const root = ReactDOM.createRoot($myContent);
+    root.render(
+      React.createElement('h1', {id: 'title'}, 'Hello React With Rocks EasyWeb!')
+    );
+   
+  </script>
+</body>
+</html>
